@@ -19,6 +19,7 @@ function filter(arr,fn){
 //高阶函数
 //不需要关注具体是实现细节
 //主要用来抽象通用问题
+//只关注目标和结果
 let ary = filter([1,2,34,5,6],function(item){
     return item%2 === 0;
 })

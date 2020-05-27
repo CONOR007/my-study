@@ -32,3 +32,19 @@ const curryFun = curry(sum);
 console.log(curryFun(1,2,3));
 console.log(curryFun(1,2)(3));
 console.log(curryFun(1)(2,3));
+
+//箭头函数模拟柯里化
+function curry2(fn) {
+    return function cry(...arg){
+        if(arg.length<fn.length){
+            return function (){
+                return cry(...arg.concat(Array.from(arguments)))
+            }
+        }
+        return fn(...arg)
+    }
+}
+const curryFun2 = curry2(sum);
+console.log(curryFun2(1,2,3));
+console.log(curryFun2(1,2)(3));
+console.log(curryFun2(1)(2,3));

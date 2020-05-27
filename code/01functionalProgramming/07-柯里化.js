@@ -20,6 +20,7 @@ function checkAge3(min){
         return age >= min
     }
 }
+
 let age18 = checkAge3(18);
 
 console.log(age18(22));
