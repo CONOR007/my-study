@@ -2,78 +2,152 @@
 
 ## 第一题
 
-- 最终执行结果: 10
-- Var 声明的 i 变量被提升到全局作用域中,for循环被执行之后 i = 10,所有函数的执行结果打印结果都问10
+- 工作原理:设置引用数,判断当前引用数是否为0
+- 优点:发现垃圾时能及时回收,最大限度减少程序暂停
+- 缺点:无法回收循环阴引用对象,时间开销大
 
 ## 第二题
 
-- 最终执行结果:报错
-- 存在暂时性死区且不符合使用规范,let需要先声明后使用
+- 工作流程:分为标记和清除两个阶段,遍历所有对象活动对象.清除没有标记的对象,清除之后抹掉第一次标记的对象,回收相应的空间.
 
 ## 第三题
 
-- Math.min(...arr)
+- v8新生代就是存活时间较短的对象,存储在小空间中(32位16M 64位32M). 新生代空间也分成两个等量大小的空间,使用空间为from,空闲空间为to 活动对象存储于from标记整理后的活动对象拷贝到to from和to交换空间完成释放. 拷贝过程中可能会出现晋升(从新生代移动到老生代,一轮GC还存活的新生代需要晋升,to空间使用率超过25%需要晋升)
 
 ## 第四题
 
-| 变量  |           使用            |        作用域        | 变量提升 |   声明   |    值    |
-| ----- | :-----------------------: | :------------------: | :------: | :------: | :------: |
-| var   |  可以先声明也可以先使用   | 存在全局和函数作用域 |   存在   |  可重复  |  值可变  |
-| let   | 先声明后使用,可以先不赋值 |         块级         |  不存在  | 不可重复 |  值可变  |
-| const |   先声明后使用,必须赋值   |         块级         |  不存在  | 不可重复 | 值不可变 |
+- 增量标记用于老年代内存回收的效率优化,工作原理是使用程序执行和标记算法去交替执行
 
-## 第五题
+# 代码题
 
-- 最终执行结果:20
-- 因为箭头函数没有自己的this所以this.a指向上级函数作用域fn,而fn的上级是obj,所以this是指向obj的. 故输出20
-
-## 第六题
-
-- Symbol表示唯一标识,可用于私有属性的定义及不可枚举属性的添加.
-
-## 第七题
-
-- 浅拷贝:拷贝的是对象的引用地址,被拷贝的对象和原对象共用一个地址.
-- 深拷贝:拷贝的是原对象中的内容,被拷贝的对象和原对象使用两个不同的地址.
-
-## 第八题
-
-- JS异步编程:把耗时的操作放入异步队列避免线程阻塞.
-- EventLoop:事件循环机制,当同步任务执行完成之后把异步队列中的任务拿到主线程中执行.如此反复执行.
-- 宏任务(`macrotask`):script`，`setTimeout`，`setInterval`、`I/O`、`UI render
-- 微任务(`microtask`):Promise`、`Object.observe`、`MutationObserver
-- 在挂起任务时，`JS 引擎`会将所有任务按照类别分到这两个队列中，首先在 `macrotask` 的队列（这个队列也被叫做 `task queue`）中取出第一个任务，执行完毕后取出 `microtask` 队列中的所有任务顺序执行；之后再取 `macrotask` 任务，周而复始，直至两个队列的任务都取完。
-
-## 第九题
+## 第一题
 
 ```
-new promise((resolve,rehect)=>{
-    setTimeout(()=>{
-        a = 'hello';
-        return this;
-    },10)
-}).then(res=>{
-    setTimeout(()=>{
-        b = 'lagou';
-        return this;
-    },10)})
-}).then(res=>{
-    setTimeout(()=>{
-        c = 'ivy';
-        console.log(a+b+c)
-    },10)})
-})
+const fp = require('lodash/fp');
+const cars = [
+    {name:'Ferrari FF',horsepower:660,dollar_value:700000,in_stock:true},
+    {name:'Spyker C12 Zagato',horsepower:650,dollar_value:648000,in_stock:false},
+    {name:'Jaguar XKR-S',horsepower:550,dollar_value:132000,in_stock:false},
+    {name:'Audi R8',horsepower:525,dollar_value:114200,in_stock:false},
+    {name:'Aston Martin One-77',horsepower:750,dollar_value:185000,in_stock:true},
+    {name:'pagani Huayra',horsepower:700,dollar_value:1300000,in_stock:true},
+]
 ```
 
+### 练习1
 
+- 使用组合函数实现获取最后一条数据的in_stock的属性值
 
-## 第十题
+```
+const isLastInStock = fp.flowRight(fp.prop('in_stock'),fp.last)
+```
 
-- 关系:JavaScript 是轻量级的解释性脚本语言，可嵌入到 HTML 页面中，在浏览器端执行。而TypeScript 是JavaScript 的超集，即包含JavaScript 的所有元素，能运行JavaScript 的代码，并扩展了JavaScript 的语法。相比于JavaScript ，它还增加了静态类型、类、模块、接口和类型注解方面的功能，更易于大项目的开发。
+### 练习2
 
-## 第十一题
+- 获取第一个car的name
 
-- |      | typeScript                                                   |
-  | ---- | :----------------------------------------------------------- |
-  | 优点 | TypeScript 增加了代码的可读性和可维护性<br /><br />类型系统实际上是最好的文档，大部分的函数看看类型的定义就可以知道如何使用了<br /><br />可以在编译阶段就发现大部分错误，这总比在运行时候出错好<br /><br />增强了编辑器和 IDE 的功能，包括代码补全、接口提示、跳转到定义、重构等<br /><br />TypeScript 拥有活跃的社区<br /><br />TypeScript 拥抱了 ES6 规范，也支持部分 ESNext 草案的规范 |
-  | 缺点 | 先声明后使用,可以先不赋值<br /><br />有一定的学习成本，需要理解接口（Interfaces）、泛型（Generics）、类（Classes）、枚举类型（Enums）等前端工程师可能不是很熟悉的概念<br /><br />短期可能会增加一些开发成本，毕竟要多写一些类型的定义，不过对于一个需要长期维护的项目，TypeScript 能够减少其维护成本<br /><br />集成到构建流程需要一些工作量<br /><br />可能和一些库结合的不是很完美 |
+```
+const isFirstName = fp.flowRight(fp.prop('name'),fp.first)
+```
+
+### 练习3
+
+- 使用函数组合的方式实现_average
+
+```
+const _average = function(xs){
+    return fp.reduce(fp.add, 0, xs)/xs.length
+}
+const averageDollarValue = fp.flowRight(_average,fp.map(x=>x.dollar_value))
+```
+
+### 练习4
+
+- 使用函数组合实现返回一个下划线连接小写字符串把数组总的name转换成hello_world
+
+```
+let _underscore = fp.replace(/\W+/g,'_')
+const sanitizeNames = fp.flowRight(fp.map(x=>fp.flowRight(_underscore,fp.toLower)((x.name))))
+```
+
+# 代码题2
+
+```
+class Container {
+    static of (value){
+        return new Container(value)
+    }
+    constructor (value){
+        this._value = value
+    }
+    map(fn){
+        return Container.of(fn(this._value))
+    }
+    join(){
+        return this._value
+    }
+
+}
+
+class Maybe {
+    static of (x){
+        return new Maybe(x)
+    }
+    isNothing(){
+        return this._value === null || this._value === undefined
+    }
+    constructor (value){
+        this._value = value
+    }
+    map(fn){
+        return this.isNothing() ? this : Maybe.of(fn(this._value))
+    }
+}
+```
+
+### 练习1
+
+- 实现一个能让functor里的值增加的函数
+
+```
+const fp = require('lodash/fp')
+let maybe = Maybe.of([5,6,1])
+let ex1 = (x)=>maybe.map(fp.map(fp.add(x)))._value
+```
+
+### 练习2
+
+- 实现一个函数,能够使用fp.first获取列表的第一个元素
+
+```
+let xs = Container.of(['do','ray','me','fa','so','la','ti','do'])
+let ex2 = ()=>xs.map(fp.first)._value
+console.log(ex2());
+```
+
+### 练习3
+
+- 实现一个函数找到user的首字母
+
+```
+let safeProp = fp.curry((x,o)=>Maybe.of(o[x]))
+let user = {id:2,name:'Albert'}
+let ex3 = fp.flowRight((x)=>x.map(fp.first)._value,safeProp('name'))
+console.log(ex3(user));
+```
+
+### 练习4
+
+- 使用Maybe重写ex4,不能有if
+
+```
+const fp = require('lodash/fp')
+let ex4 = function (n) {
+    if(n) {
+        return parseInt(n)
+    }
+}
+let EX4 = fp.flowRight(x=>x.map(parseInt)._value,Maybe.of)
+console.log(EX4(4.65));
+```
+
