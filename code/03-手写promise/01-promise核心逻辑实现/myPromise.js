@@ -213,6 +213,6 @@ function P1 () {
 
 P1()
 .then(value=>console.log(value))
-.catch(errInfo=>console.log(errInfo))
+// .catch(errInfo=>console.log(errInfo))
 
 // module.exports = MyPromise
