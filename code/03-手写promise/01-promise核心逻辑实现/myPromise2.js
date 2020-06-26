@@ -1,66 +1,131 @@
-const PENFDING = 'pending';
-const FUFILLED = 'fufilled';
-const REJECTZED = 'rejected';
+const PENDING = 'pending'
+const FULFILLED = 'fulfilled'
+const REJECTED = 'rejected'
 class MyPromise {
-    constructor(zhiXingQi){
-        zhiXingQi(this.resolve,this.reject)
+    constructor (runNow) {
+        try {
+            runNow(this.resolve,this.reject);
+        }catch(err){
+            this.reject(err);
+        }
     }
-    status = PENFDING;
+    status = PENDING;
     successInfo = undefined;
     errInfo = undefined;
-    successCallBack = [];
-    errCallBack = [];
-    resolve = (value)=>{
-        if(this.status !== PENFDING) return
-        this.status = FUFILLED
-        this.successInfo = value
-        while(this.successCallBack.length){
-            this.successCallBack.shift()(value);
+    successCallBackAry = [];
+    failCallBackAry = [];
+    resolve = (successInfo) => {
+        if(this.status !== PENDING) return;
+        this.status = FULFILLED;
+        this.successInfo = successInfo;
+        while(this.successCallBackAry.length){
+            this.successCallBackAry.shift()();
         }
     }
-    reject = (errInfo)=>{
-        if(this.status !== PENFDING) return
-        this.status = REJECTZED
-        this.errInfo = errInfo
-        while(this.errCallBack.length){
-            this.errCallBack.shift()(errInfo);
-        }
+    reject = (errInfo) => {
+        if(this.status !== PENDING) return;
+        this.status = REJECTED;
+        this.errInfo = errInfo;
+        while(this.failCallBackAry.length){
+            this.failCallBackAry.shift()();
+        }        
     }
-    then(successCallBack,errCallBack){
+    then(successCallBack,failCallBack){
+        successCallBack = successCallBack ? successCallBack : successInfo => successInfo;
+        failCallBack = failCallBack ? failCallBack : errInfo => {throw errInfo};
+        const CurPromise = new MyPromise((resolve,reject)=>{
+            if(this.status === FULFILLED){
+                setTimeout(()=>{
+                    try{
+                        let CurReturnVal = successCallBack(this.successInfo);
+                        resolvePromise(CurPromise,CurReturnVal,resolve,reject)
+                    }catch(err){
+                        reject(err)
+                    }
+                },0)
+            }else if (this.status === REJECTED){
+                setTimeout(()=>{
+                    try{
+                        let CurReturnVal = failCallBack(this.errInfo);
+                        resolvePromise(CurPromise,CurReturnVal,resolve,reject)
+                    }catch(err){
+                        reject(err)
+                    }
+                },0)               
+            }else {
+                this.successCallBackAry.push(()=>{
+                    setTimeout(()=>{
+                        try{
+                            let CurReturnVal = successCallBack(this.successInfo);
+                            resolvePromise(CurPromise,CurReturnVal,resolve,reject)
+                        }catch(err){
+                            reject(err)
+                        }
+                    },0)  
+                });
+                this.failCallBackAry.push(()=>{
+                    setTimeout(()=>{
+                        try{
+                            let CurReturnVal = failCallBack(this.errInfo);
+                            resolvePromise(CurPromise,CurReturnVal,resolve,reject)
+                        }catch(err){
+                            reject(err)
+                        }
+                    },0)                    
+                });
+            }
+        })
+        return CurPromise;
+    }
+    
+    static all (array) {
+        let result = [];
+        let index = 0;
         return new MyPromise((resolve,reject)=>{
-            if(this.status === FUFILLED){
-                const x = successCallBack(this.successInfo);
-                //resolve(x);
-                resolvePromise(x,resolve,reject)
-            }else if(this.status === REJECTZED){
-                errCallBack(this.errInfo);
-            }else{
-                this.successCallBack.push(successCallBack)
-                this.errCallBack.push(errCallBack)
+            function addData(value,i){
+                result[i] = value;
+                index ++;
+                if(index === result.length){
+                    resolve(result)
+                }
+            }
+            for(let i = 0 ; i < array.length ; i++){
+                if(array[i] instanceof MyPromise){
+                    array[i].then((value)=>{
+                        addData(value,i)
+                    },(err)=>{reject(err)})
+                }else{
+                    addData(array[i],i)
+                }
             }
         })
     }
-}
 
-function resolvePromise(x,resolve,reject){
-    if(x instanceof MyPromise){
-        x.then(resolve,reject)
-    }else{
-        resolve(x)
+    static resolve (val) {
+        if(val instanceof MyPromise) return val;
+        return new MyPromise((resolve,reject)=>{resolve(val)});
+    }
+
+    finally (callback) {
+        return this.then((value)=>{
+            return MyPromise.resolve(callback(value));
+        },(err)=>{
+            return MyPromise.resolve(callback(err));
+        })
+    }
+
+    catch (failCallBack){
+        this.then(undefined,failCallBack);
     }
 }
 
-function other (){
-    return new MyPromise((resolve,reject)=>{
-        resolve('other')
-    })
+function resolvePromise (CurPromise,CurReturnVal,resolve,reject) {
+    if(CurPromise ===  CurReturnVal) {
+        return reject(new TypeError('Chaining cycle detected for promise #<Promise>'))
+    }
+    if(CurReturnVal instanceof MyPromise){
+        CurReturnVal.then(resolve,reject);
+    }else {
+        resolve(CurReturnVal);
+    }
 }
-
-let promise = new MyPromise((resolve,reject)=>{
-    resolve('成功');
-}).then((res)=>{
-    console.log(res);
-    return other()
-}).then((res)=>{
-    console.log(res);
-})
