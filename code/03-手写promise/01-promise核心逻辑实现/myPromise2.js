@@ -129,3 +129,33 @@ function resolvePromise (CurPromise,CurReturnVal,resolve,reject) {
         resolve(CurReturnVal);
     }
 }
+
+let other = new MyPromise((resolve,reject)=>{
+    resolve('other');
+})
+
+//p1这个promise是最后的那个then所返回的promise,而每个then都会自返回一个promise, 
+//如果自返回的promsie就是最后返回的那个promise那么就循环引用了,需经过判断抛给下一个调用者.
+//如果两个then都返回了P1,那么第一个then最后会在resolvePromise中运行CurReturnVal.then(resolve,reject);
+//这个时候P1这个promise对象既没有resolve也没有reject,那么整个代码就是一个挂起的状态,代码运行结束.
+let p1 = other
+
+.then(value=>{
+    console.log(value)
+    return p1
+},(errInfo)=>{
+    console.log(errInfo.message)
+})
+
+.then(value=>{
+    console.log(value)
+    return p1
+},(errInfo)=>{
+    console.log(errInfo.message)
+})
+
+p1.then(value=>{
+    console.log(value)
+},(errInfo)=>{
+    console.log(errInfo.message)
+})
