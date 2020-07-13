@@ -8,7 +8,7 @@
 
   
 
-  ```
+  ```javascript
   class MyPromise {
       //1.promse就是一个类 在执行这个类的时候 需要传递一个执行器 执行器立即执行
       constructor (executor) {   
@@ -31,7 +31,7 @@
 
   
 
-  ```
+  ```javascript
   //2.promse有三种状态,等待:pending 成功:rejected 失败fulfilled
   //把状态定义成常量的好处是:1.复用性 2.编辑器会有提示,而字符串是没有提示的
   const PENDING = 'pending';      //等待
@@ -67,7 +67,7 @@
 
   
 
-  ```
+  ```javascript
   const PENDING = 'pending';      //等待
   const FULFILLED = 'fulfilled';  //成功
   const REJECTED = 'rejected';    //失败
@@ -112,7 +112,7 @@
 
   
 
-  ```
+  ```javascript
   //2.promse有三种状态,等待:pending 成功:rejected 失败fulfilled
   //把状态定义成常量的好处是:1.复用性 2.编辑器会有提示,而字符串是没有提示的
   const PENDING = 'pending';      //等待
@@ -166,7 +166,7 @@
 
 - 代码片段测试,打印 '成功'.
 
-  ```
+  ```javascript
   new MyPromise((resolve,reject)=>{
       resolve('成功')
       reject('失败')
@@ -179,7 +179,7 @@
 
 - 加入异步代码测试. 一秒之后无输出. 首先执行器是一个同步代码最先被执行,然后执行then函数,由于状态还是pending,所以无任何输出,一秒之后状态被改变但是then已经执行了.
 
-  ```
+  ```javascript
   new MyPromise((resolve,reject)=>{
       setTimeout(()=>{
           resolve('成功');
@@ -193,7 +193,7 @@
 
 - ### 6.在promise类中加入异步代码
 
-  ```
+  ```javascript
   const PENDING = 'pending';      //等待
   const FULFILLED = 'fulfilled';  //成功
   const REJECTED = 'rejected';    //失败
@@ -237,7 +237,7 @@
 
 - 但如果是多次调用呢,如下
 
-  ```
+  ```javascript
   promise.then((res)=>{
       console.log(res);
   },(err)=>{
@@ -259,7 +259,7 @@
 
 - ### 7.实现then方法多次使用
 
-  ```
+  ```javascript
   const PENDING = 'pending';      //等待
   const FULFILLED = 'fulfilled';  //成功
   const REJECTED = 'rejected';    //失败
@@ -311,7 +311,7 @@
 
   
 
-  ```
+  ```javascript
   let promise = new MyPromise((resolve,reject)=>{
       resolve('成功');
   }).then((res)=>{
@@ -326,7 +326,7 @@
 
   
 
-  ```
+  ```javascript
       then (successCallback,failCallback) {
           return new MyPromise((resolve,reject)=>{
               if(this.status === FULFILLED) {
@@ -345,7 +345,7 @@
 
   
 
-  ```
+  ```javascript
   function other () {
       return new MyPromise((resolve,reject)=>{
           resolve('other');
@@ -363,7 +363,7 @@
 
 - 这里的x不确定是一个值还是一个promise对象. 需要对他进行判断,如果是promise则需要对它返回的值进行判断,同样成功调用resolve,失败调用reject
 
-  ```
+  ```javascript
   then (successCallback,failCallback) {
           //8.实现链式调用,每次都返回一个新的实例
           return new MyPromise((resolve,reject)=>{
@@ -382,7 +382,7 @@
   }
   ```
 
-  ```
+  ```javascript
   function resolvePromise (x,resolve,reject) {
       //如何判断x是不是prmise 就判断它是不是MyPromise的实例
       if(x instanceof MyPromise){
@@ -400,7 +400,7 @@
 
   
 
-  ```
+  ```javascript
   let other = new MyPromise((resolve,reject)=>{
       resolve('other');
   })
@@ -419,7 +419,7 @@
 
   具体实现主要是判断CurPromise和CurX是否是同一个promise,如果是就抛出错误,不是的话继续执行
 
-  ```
+  ```javascript
       then (successCallback,failCallback) {
           const CurPromise = new MyPromise((resolve,reject)=>{
               if(this.status === FULFILLED) {
@@ -440,7 +440,7 @@
       }
   ```
 
-  ```
+  ```javascript
   function resolvePromise (CurPromise,CurX,resolve,reject) {
       //判断CurPromise和CurX是否是同一个promise
       if(CurPromise === CurX){
@@ -459,7 +459,7 @@
 
 - ### 11.目前为止全部代码
 
-  ```
+  ```javascript
   //2.promse有三种状态,等待:pending 成功:rejected 失败fulfilled
   //把状态定义成常量的好处是:1.复用性 2.编辑器会有提示,而字符串是没有提示的
   const PENDING = 'pending';      //等待
@@ -570,7 +570,7 @@
 
   
 
-  ```
+  ```javascript
   //2.promse有三种状态,等待:pending 成功:rejected 失败fulfilled
   //把状态定义成常量的好处是:1.复用性 2.编辑器会有提示,而字符串是没有提示的
   const PENDING = 'pending';      //等待
@@ -754,7 +754,7 @@
   failCallback = failCallback ? failCallback : errInfo=>{throw errInfo};
   ```
 
-  ```
+  ```javascript
   new MyPromise((resolve,reject)=>{
       reject('resolve');
   })
@@ -775,7 +775,7 @@
 
   
 
-  ```
+  ```javascript
     function P1 () {
         return new MyPromise((resolve,reject)=>{
             setTimeout(()=>{
@@ -799,7 +799,7 @@
     })
   ```
 
-  ```
+  ```javascript
       //批量执行
       static all (array) {
           let result = [];
@@ -836,7 +836,7 @@
 
   
 
-  ```
+  ```javascript
   function P1 () {
       return new MyPromise((resolve,reject)=>{
           resolve('hello')
@@ -848,7 +848,7 @@
   MyPromise.resolve(P1()).then((result)=>{console.log(result)});
   ```
 
-  ```
+  ```javascript
   //把给定的值转成promise对象
   static resolve (val) {
     if(val instanceof MyPromise) return val;
@@ -870,7 +870,7 @@
 
   
 
-  ```
+  ```javascript
   function P1 () {
       return new MyPromise((resolve,reject)=>{
           resolve('finally')
@@ -891,7 +891,7 @@
   }).then(value=>console.log(value),errInfo=>console.log(errInfo));
   ```
 
-  ```
+  ```javascript
   //无论成功或失败都执行一次
   finally(callback){
       return this.then((value)=>{
@@ -915,7 +915,7 @@
 
   
 
-  ```
+  ```javascript
   
   function P1 () {
       return new MyPromise((resolve,reject)=>{
@@ -927,7 +927,7 @@
   .catch(errInfo=>console.log(errInfo))
   ```
 
-  ```
+  ```javascript
   //捕获错误的回调
   catch(failCallBack){
   	return this.then(undefined,failCallBack);
@@ -936,7 +936,7 @@
 
 - ### 18.最终代码
 
-```
+```javascript
 //2.promse有三种状态,等待:pending 成功:rejected 失败fulfilled
 //把状态定义成常量的好处是:1.复用性 2.编辑器会有提示,而字符串是没有提示的
 const PENDING = 'pending';      //等待
