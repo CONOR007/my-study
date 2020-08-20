@@ -34,7 +34,7 @@ class MyPromise {
     //3.resolve和reject分别改变状态为成功和失败 调用resolve是pending->fulfilled  调用reject是pending->rejected
     //resolve和reject之所以定义成箭头函数就是为了让其内部this指向MyPromise
 
-    //传递成功的函数
+    //传递成功的函数 (由于resolve和reject在其它地方调用.这里必须用箭头函数,才能保证函数内this指向当前对象)
     resolve = (value) => {
         //一旦状态确认就不可更改
         if(this.status !== PENDING) return;
