@@ -1,0 +1,21 @@
+{
+  "name": "conor-gulp-demo",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/zce/zce-gulp-demo.git",
+  "author": "zce <w@zce.me> (https://zce.me)",
+  "license": "MIT",
+  "scripts": {
+    "clean": "conor-pages clean",
+    "build": "conor-pages build",
+    "start": "conor-pages start"
+  },
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.15.0"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  }
+}

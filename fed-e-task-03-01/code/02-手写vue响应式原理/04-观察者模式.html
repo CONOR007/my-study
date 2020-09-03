@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>观察者模式</title>
+</head>
+<body>
+  <script>
+      class Dep {
+        constructor () {
+          this.subs = []
+        }
+        addSub (sub) {
+          if(sub && sub.updata){
+            this.subs.push(sub)
+          }
+        }
+        notify () {
+          this.subs.forEach((element)=>{
+            element.updata()
+          })
+        }
+      }
+      class watch {
+        updata() {
+          console.log('观察者')
+        }
+      }
+      const dep = new Dep()
+      dep.addSub (new watch())
+      dep.addSub (new watch())
+      dep.addSub (new watch())
+      dep.addSub (new watch())
+      dep.notify()
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 通过给script添加type="module",就可以用ESModule的标准执行其中的JS代码了 -->
+    <script type="module">
+        console.log('ESModule语法特性');
+    </script>
+
+    <!-- ESM默认是严格模式忽略'use strict',严格模式下this指向undefined -->
+    <script type="module">
+        var foo = '123'
+        console.log(foo);
+        console.log(this);
+    </script>
+
+    <!-- 非严格模式this指向window -->
+    <script>
+        console.log(this);
+    </script>
+    
+    <!-- ESM的每个模块都有单独的私有作用域 -->
+    <script type="module">
+        console.log(foo);//报错
+    </script>
+
+    <!-- ESM是通过cors的方式请求外部JS模块的 -->
+    <script type="module" src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+
+    <!-- 正常情况下的script代码会阻塞p标签的渲染,而ESM会延迟执行脚本 -->
+    <script>
+        alert('123')
+    </script>
+    
+    <script type="module">
+        alert('123')
+    </script>
+    
+    <p>需要显示的内容</p>
+</body>
+</html>
