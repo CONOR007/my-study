@@ -4,9 +4,11 @@
 
 module.exports = {
   router: {
-    linkActiveClass: 'active',
-    // 自定义路由表规则
-    extendRoutes (routes, resolve) {
+     // 在当前导航链接时的样式
+     linkActiveClass: 'active',
+      // 自定义路由表规则
+      extendRoutes (routes, resolve) {
+      console.log(routes);
       // 清除 Nuxt.js 基于 pages 目录默认生成的路由表规则
       routes.splice(0)
 
