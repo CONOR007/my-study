@@ -1,0 +1,37 @@
+{
+  "publicPath": "/dist/",
+  "all": [
+    "app.7c79c2e0a0b62787c500.js",
+    "app.7c79c2e0a0b62787c500.js.map"
+  ],
+  "initial": [
+    "app.7c79c2e0a0b62787c500.js"
+  ],
+  "async": [],
+  "modules": {
+    "0c44c8aa": [
+      0,
+      1
+    ],
+    "9f2ca7ee": [
+      0,
+      1
+    ],
+    "1db48fa6": [
+      0,
+      1
+    ],
+    "67f1f34a": [
+      0,
+      1
+    ],
+    "b63dcb96": [
+      0,
+      1
+    ],
+    "19173c1e": [
+      0,
+      1
+    ]
+  }
+}
