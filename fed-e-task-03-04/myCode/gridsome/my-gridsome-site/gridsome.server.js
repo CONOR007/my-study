@@ -4,13 +4,28 @@
 
 // Changes here require a server restart.
 // To restart press CTRL + C in terminal and run `gridsome develop`
-
+const axios = require('axios')
 module.exports = function (api) {
-  api.loadSource(({ addCollection }) => {
-    // Use the Data Store API here: https://gridsome.org/docs/data-store-api/
+  api.loadSource(async actions => {
+    const collection = actions.addCollection('Post')
+
+    const { data } = await axios.get('https://jsonplaceholder.typicode.com/posts')
+
+    for (const item of data) {
+      collection.addNode({
+        id: item.id,
+        title: item.title,
+        content: item.body
+      })
+    }
   })
 
+  // 通过代码的方式创建路由页面
   api.createPages(({ createPage }) => {
+    createPage({
+      path: '/my-page/:id(\\d+)', 
+      component: './src/templates/MyPage.vue'
+    },)
     // Use the Pages API here: https://gridsome.org/docs/pages-api/
   })
 }
