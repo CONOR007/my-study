@@ -19,7 +19,7 @@ if (isProd) {
     template,
     clientManifest
   })
-} else {
+} else {}
   // 开发模式 -> 监视打包构建 -> 重新生成 Renderer 渲染器
   onReady = setupDevServer(server, (serverBundle, template, clientManifest) => {
     renderer = createBundleRenderer(serverBundle, {
