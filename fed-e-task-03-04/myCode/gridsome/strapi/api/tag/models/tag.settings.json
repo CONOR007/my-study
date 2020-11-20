@@ -1,8 +1,8 @@
 {
   "kind": "collectionType",
-  "collectionName": "posts",
+  "collectionName": "tags",
   "info": {
-    "name": "Post"
+    "name": "tag"
   },
   "options": {
     "increments": true,
@@ -11,13 +11,12 @@
   },
   "attributes": {
     "title": {
-      "type": "string",
-      "required": true,
-      "unique": true
+      "type": "string"
     },
-    "content": {
-      "type": "richtext",
-      "required": true
+    "posts": {
+      "via": "tags",
+      "collection": "post",
+      "dominant": true
     }
   }
 }
