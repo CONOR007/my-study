@@ -21,14 +21,13 @@
     "strapi-plugin-upload": "3.3.3",
     "strapi-connector-bookshelf": "3.3.3",
     "knex": "<0.20.0",
-    "sqlite3": "latest",
-    "strapi-plugin-graphql": "3.3.3"
+    "sqlite3": "latest"
   },
   "author": {
     "name": "A Strapi developer"
   },
   "strapi": {
-    "uuid": "d0a50cdd-ce76-4315-807b-05a42f6f8f84"
+    "uuid": "d02291c8-6e3b-4f82-9340-efbb4077d41d"
   },
   "engines": {
     "node": ">=10.16.0 <=14.x.x",
