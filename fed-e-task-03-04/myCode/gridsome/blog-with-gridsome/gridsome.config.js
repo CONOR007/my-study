@@ -17,7 +17,7 @@ module.exports = {
     {
       use: '@gridsome/source-strapi',
       options: {
-        apiURL: 'http://localhost:1337',
+        apiURL: process.env.GRIDSOME_API_URL,
         queryLimit: 1000, // 默认查询100条数据
         contentTypes: ['post','tag'],
         typeName:'Strapi',
